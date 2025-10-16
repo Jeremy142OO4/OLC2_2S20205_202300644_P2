@@ -1,0 +1,50 @@
+ID,Tipo,Entorno,Valor
+suma,ENTERO,global,1368
+resultadoPotencia,ENTERO,global,81
+strDecimal,CADENA,global,"3.141590"
+decimal,DOUBLE,global,3.141590
+notaFinal,DOUBLE,global,87.900000
+strBoolean,CADENA,global,"true"
+numeroPalindromo,ENTERO,global,123
+numeroTexto1,CADENA,global,"123"
+esPalindromo1,BOOLEANO,global,true
+esAprobado1,BOOLEANO,global,true
+promedio1,DOUBLE,global,85.000000
+strChar,CADENA,global,"A"
+caracter,CHAR,global,A
+numeroTexto2,CADENA,global,"456"
+esPalindromo2,BOOLEANO,global,false
+esAprobado2,BOOLEANO,global,true
+promedio2,DOUBLE,global,90.666667
+reporteCalificaciones,CADENA,global,"85 - 92 - 78 - 95"
+listaMaterias,CADENA,global,"Matematicas | Fisica | Quimica"
+materias,CADENA,global,"∞csª¡Y"
+listaEstudiantes,CADENA,global,"Ana, Luis, Maria, Carlos"
+estudiantes,CADENA,global,"Äasª¡Y"
+numeroTexto3,CADENA,global,"789"
+numeroFloat,DECIMAL,global,45.669998
+mensaje,CADENA,global,"Estudiante: Carlos P√©rez - Calificaci√≥n: 95 - EXCELENTE"
+strEntero,CADENA,global,"42"
+verdadero,BOOLEANO,global,true
+entero,ENTERO,global,42
+numero,ENTERO,global,9876
+promedioEst1,DOUBLE,global,88.400000
+decimal1,CADENA,global,"3.14159"
+promedioEst2,DOUBLE,global,81.800000
+decimal2,CADENA,global,"2.71828"
+base,ENTERO,global,3
+notasEstudiante1,ENTERO,global,85
+num1,ENTERO,global,123
+notasEstudiante2,ENTERO,global,78
+num2,ENTERO,global,456
+num3,ENTERO,global,789
+sumaDigitos,ENTERO,global,30
+numerosOrdenados,ENTERO,global,5
+posicionEncontrada,ENTERO,global,2
+e,DOUBLE,global,2.718280
+exponente,ENTERO,global,4
+pi,DOUBLE,global,3.141590
+calificacionesTexto,CADENA,global,"–esª¡Y"
+flotanteTexto,CADENA,global,"45.67f"
+producto,DOUBLE,global,8.539721
+valorBuscado,ENTERO,global,23

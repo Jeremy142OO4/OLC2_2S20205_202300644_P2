@@ -1,0 +1,19 @@
+para el lexer
+
+flex -l lexer.l
+
+para el bison
+
+bison -dv parser.y
+
+######################
+juntarlos
+
+gcc -o compilador parser.tab.c lex.yy.c
+
+juntarlos con main
+
+gcc -o compilador main.c ./lenguaje/parser.tab.c ./lenguaje/lex.yy.c
+
+jungar ast:
+gcc -o compilador main.c lenguaje/parser.tab.c lenguaje/lex.yy.c ast/ast.c class/entorno.c class/ejecutar.c -Iast -Ilenguaje
