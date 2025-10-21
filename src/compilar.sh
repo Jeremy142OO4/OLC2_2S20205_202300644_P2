@@ -13,6 +13,10 @@ gcc -o compilador \
     lenguaje/lex.yy.c \
     ast/ast.c \
     class/utils/errores.c \
+    class/utils/sys_emitter.c \
+    class/utils/codegen_arm64.c \
+    class/utils/num_to_str.c \
+    class/utils/arm_codegen_singleton.c \
     class/entorno/entorno.c \
     class/expresiones/ejecutar.c \
     class/expresiones/aritmetico.c \
