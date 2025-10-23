@@ -9,6 +9,7 @@
 #include "./logico.h"
 #include "./length.h"
 #include "./llamada_funcion.h"
+#include "../asm/gen_expr.h"
 #include "./join.h"
 #include "./parser.h"
 #include "./vector_index.h"
@@ -122,6 +123,7 @@ TipoRetorno ejecutar(struct ASTNode *node, struct entorno *entorno)
     {
         TipoRetorno valor = ejecutar(node->left, entorno);
         ejecutarImprimir(valor);
+        gen_imprimir_expr(node->left);
     }
     else if (strcmp(node->kind, "var") == 0)
     {

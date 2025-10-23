@@ -1,61 +1,68 @@
-.text
-.global _start
+    .section .text
+    .global _start
+    .p2align 2
 _start:
-    adrp x1, L_str_1
-    add  x1, x1, :lo12:L_str_1
-    adrp x2, L_str_1_len
-    add  x2, x2, :lo12:L_str_1_len
-    ldr  x2, [x2]
-    mov  x0, #1
-    mov  x8, #64
-    svc  #0
-    adrp x1, L_str_2
-    add  x1, x1, :lo12:L_str_2
-    adrp x2, L_str_2_len
-    add  x2, x2, :lo12:L_str_2_len
-    ldr  x2, [x2]
-    mov  x0, #1
-    mov  x8, #64
-    svc  #0
-    adrp x0, L_str_3
-    add  x0, x0, :lo12:L_str_3
-    adrp x9, a
-    add  x9, x9, :lo12:a
-    str  x0, [x9]
-    adrp x1, L_str_4
-    add  x1, x1, :lo12:L_str_4
-    adrp x2, L_str_4_len
-    add  x2, x2, :lo12:L_str_4_len
-    ldr  x2, [x2]
-    mov  x0, #1
-    mov  x8, #64
-    svc  #0
-    adrp x1, L_str_5
-    add  x1, x1, :lo12:L_str_5
-    adrp x2, L_str_5_len
-    add  x2, x2, :lo12:L_str_5_len
-    ldr  x2, [x2]
-    mov  x0, #1
-    mov  x8, #64
-    svc  #0
-    mov x0, #0
-    mov x8, #93
-    svc #0
-
-.section .data
-a:
-    .quad L_str_0
-
-.section .rodata
-L_str_0: .ascii "hola"
-L_str_0_len: .quad 4
-L_str_1: .ascii "hola"
-L_str_1_len: .quad 4
-L_str_2: .ascii "\n"
-L_str_2_len: .quad 1
-L_str_3: .ascii "a"
-L_str_3_len: .quad 1
-L_str_4: .ascii "a"
-L_str_4_len: .quad 1
-L_str_5: .ascii "\n"
-L_str_5_len: .quad 1
+    .section .data
+a__g0:
+    .p2align 2
+    .word 15
+    .section .text
+    mov w2, #0
+    .section .text
+    sub     sp, sp, #64
+    mov     w3, #0
+    cbnz    x2, 1f
+    mov     x9, sp
+    mov     w4, #'0'
+    strb    w4, [x9]
+    mov     x8, #64
+    mov     x0, #1
+    mov     x1, x9
+    mov     x2, #1
+    svc     #0
+    add     sp, sp, #64
+    b       5f
+1:
+    cmp     x2, #0
+    bge     2f
+    neg     x2, x2
+    mov     w3, #1
+2:
+    add     x10, sp, #64
+    mov     x11, x10
+    mov     x5, #10
+3:
+    udiv    x7, x2, x5
+    mul     x12, x7, x5
+    sub     x8, x2, x12
+    add     w8, w8, #'0'
+    sub     x11, x11, #1
+    strb    w8, [x11]
+    mov     x2, x7
+    cbnz    x2, 3b
+    cbz     w3, 4f
+    sub     x11, x11, #1
+    mov     w8, #'-'
+    strb    w8, [x11]
+4:
+    sub     x2, x10, x11
+    mov     x8, #64
+    mov     x0, #1
+    mov     x1, x11
+    svc     #0
+    add     sp, sp, #64
+5:
+    .section .rodata
+str_0:        .ascii "\n"
+    .section .text
+    adrp    x0, str_0
+    add     x0, x0, :lo12:str_0
+    mov     x8, #64
+    mov     x1, x0
+    mov     x2, #1
+    mov     x0, #1
+    svc     #0
+    .section .text
+    mov     x0, #0
+    mov     x8, #93
+    svc     #0

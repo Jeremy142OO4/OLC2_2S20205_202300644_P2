@@ -8,26 +8,6 @@
 #include "../expresiones/ejecutar.h"
 #include "../expresiones/vector_index.h"
 
-
-#include "../utils/arm_codegen_singleton.h"
-#include "../utils/codegen_arm64.h"
-
-static void emitir_store_segun_tipo(const char* nombre, TipoRetorno v){
-    if (!nombre || !v.valor) return;
-    struct CodegenARM64* H = arm_codegen_handle();
-    if (!H) return;
-
-    switch (v.tipo){
-        case TIPO_ENTERO:    cg_arm64_store_int_imm   (H, nombre, *((int*)v.valor)); break;
-        case TIPO_BOOLEANO:  cg_arm64_store_bool_imm  (H, nombre, *((int*)v.valor)!=0?1:0); break;
-        case TIPO_CHAR:      cg_arm64_store_char_imm  (H, nombre, *((unsigned char*)v.valor)); break;
-        case TIPO_DECIMAL:   cg_arm64_store_float_imm (H, nombre, *((float*)v.valor)); break;
-        case TIPO_DOUBLE:    cg_arm64_store_double_imm(H, nombre, *((double*)v.valor)); break;
-        case TIPO_CADENA:    cg_arm64_store_string_lit(H, nombre, (const char*)v.valor); break;
-        default: break;
-    }
-}
-
 TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
 {
     TipoRetorno res = (TipoRetorno){NULL, TIPO_NULO, CTRL_NORMAL};
@@ -73,9 +53,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
         }
         s->valor = val.valor;
         s->tipo = val.tipo;
-
-        emitir_store_segun_tipo(s->id, val);
-        
         return val;
     }
     else if (strcmp(node->value, "+=") == 0)
@@ -85,21 +62,18 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) + (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DECIMAL && val.tipo == TIPO_DECIMAL)
         {
             float *salida = malloc(sizeof(float));
             *salida = (*(float *)s->valor) + (*(float *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DECIMAL;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DECIMAL, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DOUBLE && val.tipo == TIPO_DOUBLE)
         {
             double *salida = malloc(sizeof(double));
             *salida = (*(double *)s->valor) + (*(double *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DOUBLE;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DOUBLE, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_CADENA && val.tipo == TIPO_CADENA)
         {
@@ -107,7 +81,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             char *salida = malloc(n1 + n2 + 1);
             strcpy(salida, (char *)s->valor); strcat(salida, (char *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_CADENA;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_CADENA, CTRL_NORMAL});
         }
         else { printf("Error: Operación '+=' no soportada para estos tipos\n"); }
     }
@@ -118,21 +91,18 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) - (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DECIMAL && val.tipo == TIPO_DECIMAL)
         {
             float *salida = malloc(sizeof(float));
             *salida = (*(float *)s->valor) - (*(float *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DECIMAL;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DECIMAL, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DOUBLE && val.tipo == TIPO_DOUBLE)
         {
             double *salida = malloc(sizeof(double));
             *salida = (*(double *)s->valor) - (*(double *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DOUBLE;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DOUBLE, CTRL_NORMAL});
         }
         else { printf("Error: Operación '-=' no soportada para estos tipos\n"); }
     }
@@ -143,21 +113,18 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) * (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DECIMAL && val.tipo == TIPO_DECIMAL)
         {
             float *salida = malloc(sizeof(float));
             *salida = (*(float *)s->valor) * (*(float *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DECIMAL;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DECIMAL, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DOUBLE && val.tipo == TIPO_DOUBLE)
         {
             double *salida = malloc(sizeof(double));
             *salida = (*(double *)s->valor) * (*(double *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DOUBLE;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DOUBLE, CTRL_NORMAL});
         }
         else { printf("Error: Operación '*=' no soportada para estos tipos\n"); }
     }
@@ -169,7 +136,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) / derecha;
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DECIMAL && val.tipo == TIPO_DECIMAL)
         {
@@ -177,7 +143,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             float *salida = malloc(sizeof(float));
             *salida = (*(float *)s->valor) / derecha;
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DECIMAL;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DECIMAL, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DOUBLE && val.tipo == TIPO_DOUBLE)
         {
@@ -185,7 +150,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             double *salida = malloc(sizeof(double));
             *salida = (*(double *)s->valor) / derecha;
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DOUBLE;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DOUBLE, CTRL_NORMAL});
         }
         else { printf("Error: Operación '/=' no soportada para estos tipos\n"); }
     }
@@ -197,7 +161,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) % derecha;
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DECIMAL && val.tipo == TIPO_DECIMAL)
         {
@@ -205,7 +168,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             float *salida = malloc(sizeof(float));
             *salida = fmodf(*(float *)s->valor, derecha);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DECIMAL;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DECIMAL, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_DOUBLE && val.tipo == TIPO_DOUBLE)
         {
@@ -213,7 +175,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             double *salida = malloc(sizeof(double));
             *salida = fmod(*(double *)s->valor, derecha);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_DOUBLE;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_DOUBLE, CTRL_NORMAL});
         }
         else { printf("Error: Operación '%%=' no soportada para estos tipos\n"); }
     }
@@ -224,7 +185,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) & (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_BOOLEANO && val.tipo == TIPO_BOOLEANO)
         {
@@ -233,7 +193,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int de = (val.valor ? (*(int *)val.valor != 0) : 0);
             *salida = iz & de;
             s->valor = salida; res.valor = salida; res.tipo = TIPO_BOOLEANO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_BOOLEANO, CTRL_NORMAL});
         }
         else { printf("Error: Operación '&=' no soportada para estos tipos\n"); }
     }
@@ -245,7 +204,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) | (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_BOOLEANO && val.tipo == TIPO_BOOLEANO)
         {
@@ -254,7 +212,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int de = (val.valor ? (*(int *)val.valor != 0) : 0);
             *salida = iz | de;
             s->valor = salida; res.valor = salida; res.tipo = TIPO_BOOLEANO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_BOOLEANO, CTRL_NORMAL});
         }
         else { printf("Error: Operación '|=' no soportada para estos tipos\n"); }
     }
@@ -265,7 +222,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) ^ (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else if (s->tipo == TIPO_BOOLEANO && val.tipo == TIPO_BOOLEANO)
         {
@@ -274,7 +230,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int de = (val.valor ? (*(int *)val.valor != 0) : 0);
             *salida = iz ^ de;
             s->valor = salida; res.valor = salida; res.tipo = TIPO_BOOLEANO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_BOOLEANO, CTRL_NORMAL});
         }
         else { printf("Error: Operación '^=' no soportada para estos tipos\n"); }
     }
@@ -285,7 +240,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) >> (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else { printf("Error: Operación '>>=' solo soportada para enteros\n"); }
     }
@@ -296,7 +250,6 @@ TipoRetorno ejecutarAsignacion(struct ASTNode *node, struct entorno *e)
             int *salida = malloc(sizeof(int));
             *salida = (*(int *)s->valor) << (*(int *)val.valor);
             s->valor = salida; res.valor = salida; res.tipo = TIPO_ENTERO;
-            emitir_store_segun_tipo(s->id, (TipoRetorno){salida, TIPO_ENTERO, CTRL_NORMAL});
         }
         else { printf("Error: Operación '<<=' solo soportada para enteros\n"); }
     }

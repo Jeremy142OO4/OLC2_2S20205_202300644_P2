@@ -1,2 +1,2 @@
 ID,Tipo,Entorno,Valor
-a,CADENA,global,"a"
+a,ENTERO,global,15

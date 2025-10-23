@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "tipos.h": "c",
+        "string.h": "c",
+        "imprimir.h": "c",
+        "imprimir_asm.h": "c",
+        "gen_expr.h": "c"
+    }
+}
